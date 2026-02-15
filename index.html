@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Tabeer ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:black;color:white;overflow:hidden;text-align:center;position:relative;}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;}
+.container{padding:5vh 5vw;position:relative;z-index:1;max-width:900px;margin:auto;}
+h1{font-family:'Playfair Display',serif;font-size:2.5rem;margin-bottom:30px;text-shadow:0 0 20px #ff4da6,0 0 40px #ff6699; transition: all 0.5s ease;}
+h1.glow{text-shadow:0 0 30px #ff4da6,0 0 60px #ff99cc,0 0 90px #ff66ff;}
+button{background:transparent;border:2px solid #ff4da6;color:#ff4da6;padding:12px 25px;margin:10px;border-radius:50px;cursor:pointer;transition:0.4s;font-size:16px;}
+button:hover{background:#ff4da6;color:black;box-shadow:0 0 25px #ff4da6;}
+.section{display:none;margin-top:40px;font-size:1.2rem;line-height:1.6;animation:fade 1.2s ease forwards;}
+@keyframes fade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.moon{width:160px;margin-bottom:20px;position:fixed;left:50%;top:20%;transform:translateX(-50%);animation:floatMoon 10s ease-in-out infinite alternate;z-index:-2;filter:drop-shadow(0 0 20px white);}
+@keyframes floatMoon{0%{top:20%;}50%{top:25%;}100%{top:20%;}}
+.burst-heart{position:fixed;width:12px;height:12px;border-radius:50%;pointer-events:none;z-index:9999;}
+@keyframes burstAnim{to{transform:translate(var(--x),var(--y)) scale(0.5);opacity:0;}}
+input,textarea{width:90%;max-width:400px;padding:12px;margin:10px;border-radius:10px;border:none;font-size:1rem;}
+.submit{background:#25D366;color:white;border:none;cursor:pointer;padding:12px 25px;border-radius:50px;font-size:1rem;}
+.heart-bg{position:fixed;width:18px;height:18px;background:red;transform:rotate(45deg);opacity:0.7;border-radius:50%;z-index:-1;}
+.heart-bg::before,.heart-bg::after{content:'';position:absolute;width:18px;height:18px;background:red;border-radius:50%;}
+.heart-bg::before{top:-9px;}.heart-bg::after{left:-9px;}
+p.glow-text{color:#ff99cc;text-shadow:0 0 10px #ff66ff,0 0 20px #ff99cc;}
+@media (max-width:768px){h1{font-size:2rem;} button{padding:10px 20px;font-size:14px;} .section{font-size:1rem;}}
+@media (max-width:480px){h1{font-size:1.6rem;} button{padding:8px 16px;font-size:13px;} .section{font-size:0.95rem;}}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop autoplay>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c9c5c5b3a.mp3?filename=romantic-piano-110623.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="stars"></canvas>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg" class="moon" alt="Moon">
+
+<div class="container">
+<h1 id="mainTitle">A Special Message For Tabeer ❤️</h1>
+
+<div>
+<button onclick="openSection('intro');heartBurst(event)">Introduction</button>
+<button onclick="openSection('opinion');heartBurst(event)">Opinion</button>
+<button onclick="openSection('proposal');heartBurst(event)">Proposal</button>
+<button onclick="openSection('madam');heartBurst(event)">Madam Opinion</button>
+<button onclick="openSection('promise');heartBurst(event)">My Promise</button>
+</div>
+
+<div id="intro" class="section">
+<p id="introText" class="glow-text"></p>
+</div>
+
+<div id="opinion" class="section">
+<p id="opinionText" class="glow-text"></p>
+</div>
+
+<div id="proposal" class="section">
+<p class="glow-text">
+Maybe I am not perfect, but my feelings for you are real.
+Will you give me a chance to love you forever? ❤️
+</p>
+</div>
+
+<div id="madam" class="section">
+<form onsubmit="sendToWhatsApp(); return false;">
+<input type="text" id="name" placeholder="Your Name" required>
+<textarea id="message" placeholder="Your Message" required></textarea>
+<br>
+<button type="submit" class="submit">Send Message on WhatsApp 💚</button>
+</form>
+</div>
+
+<div id="promise" class="section">
+<p id="promiseText" class="glow-text"></p>
+</div>
+</div>
+
+<script>
+// Section switch
+function openSection(id){
+document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+document.getElementById(id).style.display='block';
+if(id==='intro'){typeWriterIntro();}
+if(id==='opinion'){typeWriterOpinion();}
+if(id==='promise'){typeWriterPromise();}
+if(id==='proposal'){createHearts();}
+}
+
+// Typewriter texts
+let introText="Hi Tabeer, I made this website to express my feelings. I know this is childish but it’s my way. It’s me, your idiot ❤️";
+let opinionText="I know ap mujhy shayad mohabbat nahi karti, lekin main to karta hoon. I am serious for you. I know I am not perfect but I can love you for my entire life.";
+let promiseText="My dearest Tabeer, I promise to always cherish you, support you, and fill your life with love, laughter, and happiness. You are my heart, my joy, and my everything. ❤️";
+
+function typeWriterIntro(){let i=0;document.getElementById("introText").innerHTML="";function typing(){if(i<introText.length){document.getElementById("introText").innerHTML+=introText.charAt(i);i++;setTimeout(typing,40);}}typing();}
+function typeWriterOpinion(){let i=0;document.getElementById("opinionText").innerHTML="";function typing(){if(i<opinionText.length){document.getElementById("opinionText").innerHTML+=opinionText.charAt(i);i++;setTimeout(typing,40);}}typing();}
+function typeWriterPromise(){let i=0;document.getElementById("promiseText").innerHTML="";function typing(){if(i<promiseText.length){document.getElementById("promiseText").innerHTML+=promiseText.charAt(i);i++;setTimeout(typing,40);}}typing();}
+
+// Floating hearts background
+function createHearts(){
+for(let i=0;i<40;i++){
+let heart=document.createElement("div");
+heart.className="heart-bg";
+heart.style.background=randomColor();
+heart.style.left=Math.random()*window.innerWidth+"px";
+heart.style.top=Math.random()*window.innerHeight+"px";
+document.body.appendChild(heart);
+animateHeart(heart);
+}
+}
+function animateHeart(heart){
+let x=Math.random()*window.innerWidth;
+let y=Math.random()*window.innerHeight;
+let speed=0.3+Math.random()*0.7;
+function move(){
+y-=speed;
+if(y<-50){y=window.innerHeight; x=Math.random()*window.innerWidth;}
+heart.style.left=x+"px";
+heart.style.top=y+"px";
+requestAnimationFrame(move);
+}
+move();
+}
+function randomColor(){let colors=["#ff1a75","#ff66cc","#ff99cc","#ff4da6","#ffb3ff"]; return colors[Math.floor(Math.random()*colors.length)];}
+
+// Heart burst on heading
+function heartBurst(event){
+const x=event.clientX; const y=event.clientY;
+for(let i=0;i<25;i++){
+let heart=document.createElement("div"); heart.className="burst-heart";
+heart.style.background=randomColor();
+heart.style.left=x+"px"; heart.style.top=y+"px";
+let angle=Math.random()*2*Math.PI; let distance=Math.random()*150;
+heart.style.setProperty("--x",Math.cos(angle)*distance+"px");
+heart.style.setProperty("--y",Math.sin(angle)*distance+"px");
+heart.style.animation="burstAnim 1s ease-out forwards";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+}
+}
+
+// WhatsApp
+function sendToWhatsApp(){
+let name=document.getElementById("name").value;
+let message=document.getElementById("message").value;
+let phoneNumber="923345089789";
+let fullMessage="Name: "+name+"%0A"+"Message: "+message;
+let url="https://wa.me/"+phoneNumber+"?text="+fullMessage;
+window.open(url,"_blank");
+}
+
+// Star background
+const canvas=document.getElementById("stars"); const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+let stars=[];for(let i=0;i<200;i++){stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5});}
+function drawStars(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle="white";stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});requestAnimationFrame(drawStars);}
+drawStars();
+</script>
+
+</body>
+</html>
